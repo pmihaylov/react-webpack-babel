@@ -1,0 +1,25 @@
+version: 0.2
+phases:
+    install:
+        commands:
+            - printenv
+            - npm i -g yarn
+            - yarn setup
+    pre_build:
+        commands:
+            - npm run test
+    build:
+        commands:
+            - NODE_ENV=${APPLICATION_STAGE} npm run build
+    post_build:
+        commands:
+            - aws s3 cp --recursive --acl public-read ./coverage/lcov-report s3://${S3_COVERAGE_BUCKET}
+            - aws s3 cp --recursive --acl public-read ./public s3://${S3_DEPLOYMENT_BUCKET}
+artifacts:
+    files:
+        - buildspec.yml
+        - src/**/*
+        - public/**/*
+        - coverage/**/*
+        - package.json
+        - package-lock.json
