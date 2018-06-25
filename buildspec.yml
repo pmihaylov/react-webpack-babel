@@ -4,7 +4,7 @@ phases:
         commands:
             - printenv
             - npm i -g yarn
-            - yarn setup
+            - npm i
     pre_build:
         commands:
             - npm run test
